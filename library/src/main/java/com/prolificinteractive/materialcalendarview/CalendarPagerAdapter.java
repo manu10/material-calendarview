@@ -24,6 +24,8 @@ abstract class CalendarPagerAdapter<V extends CalendarPagerView> extends PagerAd
 
   protected final MaterialCalendarView mcv;
   private final CalendarDay today;
+  protected int decoratorPadding;
+  protected boolean decoratorIsCentered;
 
   @NonNull private TitleFormatter titleFormatter = TitleFormatter.DEFAULT;
   private Integer color = null;
@@ -374,5 +376,13 @@ abstract class CalendarPagerAdapter<V extends CalendarPagerView> extends PagerAd
 
   protected int getWeekDayTextAppearance() {
     return weekDayTextAppearance == null ? 0 : weekDayTextAppearance;
+  }
+
+  public void setDecoratorIsCentered(boolean decoratorIsCentered) {
+    this.decoratorIsCentered = decoratorIsCentered;
+  }
+
+  public void setDecoratorPadding(int decoratorPadding) {
+    this.decoratorPadding = decoratorPadding;
   }
 }
