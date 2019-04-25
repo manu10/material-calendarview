@@ -47,10 +47,13 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
   private boolean isDecoratedDisabled = false;
   @ShowOtherDates
   private int showOtherDates = MaterialCalendarView.SHOW_DEFAULTS;
+  private final int decoratorPadding;
+  private boolean decoratorFillsCell;
 
-  public DayView(Context context, CalendarDay day) {
+  public DayView(Context context, CalendarDay day, boolean decoratorFillsCell, int decoratorPadding) {
     super(context);
-
+    this.decoratorFillsCell = decoratorFillsCell;
+    this.decoratorPadding = decoratorPadding;
     fadeTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
     setSelectionColor(this.selectionColor);
@@ -76,7 +79,7 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
    */
   public void setDayFormatter(DayFormatter formatter) {
     this.contentDescriptionFormatter = contentDescriptionFormatter == this.formatter ?
-                                       formatter : contentDescriptionFormatter;
+            formatter : contentDescriptionFormatter;
     this.formatter = formatter == null ? DayFormatter.DEFAULT : formatter;
     CharSequence currentLabel = getText();
     Object[] spans = null;
@@ -110,7 +113,7 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
   @NonNull
   public String getContentDescriptionLabel() {
     return contentDescriptionFormatter == null ? formatter.format(date)
-                                               : contentDescriptionFormatter.format(date);
+            : contentDescriptionFormatter.format(date);
   }
 
   public void setSelectionColor(int color) {
@@ -170,15 +173,15 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
 
     if (!isInMonth && shouldBeVisible) {
       setTextColor(getTextColors().getColorForState(
-          new int[] { -android.R.attr.state_enabled }, Color.GRAY));
+              new int[] { -android.R.attr.state_enabled }, Color.GRAY));
     }
     setVisibility(shouldBeVisible ? View.VISIBLE : View.INVISIBLE);
   }
 
   protected void setupSelection(
-      @ShowOtherDates int showOtherDates,
-      boolean inRange,
-      boolean inMonth) {
+          @ShowOtherDates int showOtherDates,
+          boolean inRange,
+          boolean inMonth) {
     this.showOtherDates = showOtherDates;
     this.isInMonth = inMonth;
     this.isInRange = inRange;
@@ -216,8 +219,8 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
     drawable.addState(new int[] { android.R.attr.state_checked }, generateCircleDrawable(color));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       drawable.addState(
-          new int[] { android.R.attr.state_pressed },
-          generateRippleDrawable(color, bounds)
+              new int[] { android.R.attr.state_pressed },
+              generateRippleDrawable(color, bounds)
       );
     } else {
       drawable.addState(new int[] { android.R.attr.state_pressed }, generateCircleDrawable(color));
@@ -282,24 +285,31 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
     super.onLayout(changed, left, top, right, bottom);
-    calculateBounds(right - left, bottom - top);
+    calculateBounds(right, left, bottom, top);
     regenerateBackground();
   }
 
-  private void calculateBounds(int width, int height) {
+  private void calculateBounds(int right, int left, int bottom, int top) {
+    int width = right - left;
+    int height = bottom - top;
     final int radius = Math.min(height, width);
-    final int offset = Math.abs(height - width) / 2;
+    final int offset = Math.abs(height - width) / ((decoratorFillsCell) ? 2 : 10) ;
 
     // Lollipop platform bug. Circle drawable offset needs to be half of normal offset
     final int circleOffset =
-        Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ? offset / 2 : offset;
+            Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ? offset / 2 : offset;
 
-    if (width >= height) {
-      tempRect.set(offset, 0, radius + offset, height);
-      circleDrawableRect.set(circleOffset, 0, radius + circleOffset, height);
+    if (decoratorFillsCell){
+      tempRect.set(decoratorPadding, decoratorPadding, width - decoratorPadding, height - decoratorPadding);
+      circleDrawableRect.set(decoratorPadding,decoratorPadding, width - decoratorPadding, height - decoratorPadding);
     } else {
-      tempRect.set(0, offset, width, radius + offset);
-      circleDrawableRect.set(0, circleOffset, width, radius + circleOffset);
+      if (width >= height) {
+        tempRect.set(offset, 0, radius + offset, height);
+        circleDrawableRect.set(circleOffset, 0, radius + circleOffset, height);
+      } else {
+        tempRect.set(0, offset, width, radius + offset);
+        circleDrawableRect.set(0, circleOffset, width, radius + circleOffset);
+      }
     }
   }
 }

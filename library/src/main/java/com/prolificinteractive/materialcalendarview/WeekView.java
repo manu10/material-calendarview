@@ -16,16 +16,18 @@ import org.threeten.bp.LocalDate;
       @NonNull final MaterialCalendarView view,
       final CalendarDay firstViewDay,
       final DayOfWeek firstDayOfWeek,
-      final boolean showWeekDays) {
-    super(view, firstViewDay, firstDayOfWeek, showWeekDays);
+      final boolean showWeekDays,
+      final boolean decoratorFillsCell,
+      final int decoratorPadding) {
+    super(view, firstViewDay, firstDayOfWeek, showWeekDays, decoratorFillsCell, decoratorPadding);
   }
 
   @Override protected void buildDayViews(
-      final Collection<DayView> dayViews,
-      final LocalDate calendar) {
+          final Collection<DayView> dayViews,
+          final LocalDate calendar, boolean decoratorFillsCell, int decoratorPadding) {
     LocalDate temp = calendar;
     for (int i = 0; i < DEFAULT_DAYS_IN_WEEK; i++) {
-      addDayView(dayViews, temp);
+      addDayView(dayViews, temp, decoratorFillsCell, decoratorPadding);
       temp = temp.plusDays(1);
     }
   }
