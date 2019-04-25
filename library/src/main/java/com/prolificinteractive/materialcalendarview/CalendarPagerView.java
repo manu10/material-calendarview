@@ -46,7 +46,8 @@ abstract class CalendarPagerView extends ViewGroup
           DayOfWeek firstDayOfWeek,
           boolean showWeekDays,
           boolean decoratorFillsCell,
-          int decoratorPadding) {
+          int decoratorPadding,
+          boolean dayOfWeekInDayCell) {
     super(view.getContext());
 
     this.mcv = view;
@@ -60,7 +61,7 @@ abstract class CalendarPagerView extends ViewGroup
     if (showWeekDays) {
       buildWeekDays(resetAndGetWorkingCalendar());
     }
-    buildDayViews(dayViews, resetAndGetWorkingCalendar(),decoratorFillsCell,decoratorPadding);
+    buildDayViews(dayViews, resetAndGetWorkingCalendar(), decoratorFillsCell, decoratorPadding, dayOfWeekInDayCell);
   }
 
   private void buildWeekDays(LocalDate calendar) {
@@ -77,9 +78,10 @@ abstract class CalendarPagerView extends ViewGroup
   }
 
   protected void addDayView(Collection<DayView> dayViews, LocalDate temp,
-                            boolean decoratorFillsCell, int decoratorPadding) {
+                            boolean decoratorFillsCell, int decoratorPadding,
+                            boolean dayOfWeekInDayCell) {
     CalendarDay day = CalendarDay.from(temp);
-    DayView dayView = new DayView(getContext(), day, decoratorFillsCell, decoratorPadding);
+    DayView dayView = new DayView(getContext(), day, decoratorFillsCell, decoratorPadding, dayOfWeekInDayCell);
     dayView.setOnClickListener(this);
     dayView.setOnLongClickListener(this);
     dayViews.add(dayView);
@@ -103,7 +105,7 @@ abstract class CalendarPagerView extends ViewGroup
     return firstDayOfWeek;
   }
 
-  protected abstract void buildDayViews(Collection<DayView> dayViews, LocalDate calendar, boolean decoratorFillsCell, int decoratorPadding);
+  protected abstract void buildDayViews(Collection<DayView> dayViews, LocalDate calendar, boolean decoratorFillsCell, int decoratorPadding, boolean dayOfWeekInDayCell);
 
   protected abstract boolean isDayEnabled(CalendarDay day);
 

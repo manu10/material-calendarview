@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.LocalDate;
 
 /**
@@ -133,6 +135,8 @@ public final class CalendarDay implements Parcelable {
   public boolean isAfter(@NonNull final CalendarDay other) {
     return date.isAfter(other.getDate());
   }
+
+  public DayOfWeek getDayOfWeek() { return date.getDayOfWeek(); }
 
   @Override public boolean equals(Object o) {
     return o instanceof CalendarDay && date.equals(((CalendarDay) o).getDate());

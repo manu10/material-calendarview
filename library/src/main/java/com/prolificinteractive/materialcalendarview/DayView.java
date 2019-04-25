@@ -21,7 +21,11 @@ import android.view.Gravity;
 import android.view.View;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView.ShowOtherDates;
 import com.prolificinteractive.materialcalendarview.format.DayFormatter;
+
+import org.threeten.bp.format.TextStyle;
+
 import java.util.List;
+import java.util.Locale;
 
 import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.showDecoratedDisabled;
 import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.showOtherMonths;
@@ -49,9 +53,14 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
   private int showOtherDates = MaterialCalendarView.SHOW_DEFAULTS;
   private final int decoratorPadding;
   private boolean decoratorFillsCell;
+  private boolean includeDayOfWeek = false;
 
-  public DayView(Context context, CalendarDay day, boolean decoratorFillsCell, int decoratorPadding) {
+  public DayView(Context context, CalendarDay day,
+                 boolean decoratorFillsCell,
+                 int decoratorPadding,
+                 boolean includeDayOfWeek) {
     super(context);
+    this.includeDayOfWeek = includeDayOfWeek;
     this.decoratorFillsCell = decoratorFillsCell;
     this.decoratorPadding = decoratorPadding;
     fadeTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
@@ -107,7 +116,7 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
 
   @NonNull
   public String getLabel() {
-    return formatter.format(date);
+    return formatter.format(date) + ((includeDayOfWeek)?"\n" + date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault()):"");
   }
 
   @NonNull

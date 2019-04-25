@@ -26,6 +26,7 @@ abstract class CalendarPagerAdapter<V extends CalendarPagerView> extends PagerAd
   private final CalendarDay today;
   protected int decoratorPadding;
   protected boolean decoratorFillsCell;
+  protected boolean dayOfWeekInDayCell;
 
   @NonNull private TitleFormatter titleFormatter = TitleFormatter.DEFAULT;
   private Integer color = null;
@@ -384,5 +385,9 @@ abstract class CalendarPagerAdapter<V extends CalendarPagerView> extends PagerAd
 
   public void setDecoratorPadding(int decoratorPadding) {
     this.decoratorPadding = decoratorPadding;
+  }
+
+  public void setdayOfWeekInDayCell(boolean dayOfWeekInDayCell) {
+    this.dayOfWeekInDayCell = dayOfWeekInDayCell;
   }
 }
