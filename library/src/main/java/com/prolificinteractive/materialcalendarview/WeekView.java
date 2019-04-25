@@ -17,17 +17,17 @@ import org.threeten.bp.LocalDate;
       final CalendarDay firstViewDay,
       final DayOfWeek firstDayOfWeek,
       final boolean showWeekDays,
-      final boolean decoratorIsCentered,
+      final boolean decoratorFillsCell,
       final int decoratorPadding) {
-    super(view, firstViewDay, firstDayOfWeek, showWeekDays, decoratorIsCentered, decoratorPadding);
+    super(view, firstViewDay, firstDayOfWeek, showWeekDays, decoratorFillsCell, decoratorPadding);
   }
 
   @Override protected void buildDayViews(
           final Collection<DayView> dayViews,
-          final LocalDate calendar, boolean decoratorIsCentered, int decoratorPadding) {
+          final LocalDate calendar, boolean decoratorFillsCell, int decoratorPadding) {
     LocalDate temp = calendar;
     for (int i = 0; i < DEFAULT_DAYS_IN_WEEK; i++) {
-      addDayView(dayViews, temp, decoratorIsCentered, decoratorPadding);
+      addDayView(dayViews, temp, decoratorFillsCell, decoratorPadding);
       temp = temp.plusDays(1);
     }
   }

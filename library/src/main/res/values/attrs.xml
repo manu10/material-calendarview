@@ -66,7 +66,7 @@
       <enum name="horizontal" value="1"/>
     </attr>
 
-    <attr name="mcv_decoratorIsCentered" format="boolean"/>
+    <attr name="mcv_decoratorFillsCell" format="boolean"/>
 
     <attr name="mcv_decoratorPadding" format="dimension"/>
 

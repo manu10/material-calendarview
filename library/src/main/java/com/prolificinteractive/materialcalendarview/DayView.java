@@ -48,11 +48,11 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
   @ShowOtherDates
   private int showOtherDates = MaterialCalendarView.SHOW_DEFAULTS;
   private final int decoratorPadding;
-  private boolean decoratorIsCentered;
+  private boolean decoratorFillsCell;
 
-  public DayView(Context context, CalendarDay day, boolean decoratorIsCentered, int decoratorPadding) {
+  public DayView(Context context, CalendarDay day, boolean decoratorFillsCell, int decoratorPadding) {
     super(context);
-    this.decoratorIsCentered = decoratorIsCentered;
+    this.decoratorFillsCell = decoratorFillsCell;
     this.decoratorPadding = decoratorPadding;
     fadeTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -293,13 +293,16 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
     int width = right - left;
     int height = bottom - top;
     final int radius = Math.min(height, width);
-    final int offset = Math.abs(height - width) / ((decoratorIsCentered) ? 2 : 10) ;
+    final int offset = Math.abs(height - width) / ((decoratorFillsCell) ? 2 : 10) ;
 
     // Lollipop platform bug. Circle drawable offset needs to be half of normal offset
     final int circleOffset =
             Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP ? offset / 2 : offset;
 
-    if (decoratorIsCentered){
+    if (decoratorFillsCell){
+      tempRect.set(decoratorPadding, decoratorPadding, width - decoratorPadding, height - decoratorPadding);
+      circleDrawableRect.set(decoratorPadding,decoratorPadding, width - decoratorPadding, height - decoratorPadding);
+    } else {
       if (width >= height) {
         tempRect.set(offset, 0, radius + offset, height);
         circleDrawableRect.set(circleOffset, 0, radius + circleOffset, height);
@@ -307,9 +310,6 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
         tempRect.set(0, offset, width, radius + offset);
         circleDrawableRect.set(0, circleOffset, width, radius + circleOffset);
       }
-    } else {
-      tempRect.set(decoratorPadding, decoratorPadding, width - decoratorPadding, height - decoratorPadding);
-      circleDrawableRect.set(decoratorPadding,decoratorPadding, width - decoratorPadding, height - decoratorPadding);
     }
   }
 }

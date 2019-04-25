@@ -69,7 +69,7 @@ import org.threeten.bp.temporal.WeekFields;
 public class MaterialCalendarView extends ViewGroup {
 
   public static final int INVALID_TILE_DIMENSION = -10;
-  private boolean decoratorIsCentered;
+  private boolean decoratorFillsCell;
   private int decoratorPadding;
 
   /**
@@ -288,7 +288,7 @@ public class MaterialCalendarView extends ViewGroup {
     TypedArray a = context.getTheme()
         .obtainStyledAttributes(attrs, R.styleable.MaterialCalendarView, 0, 0);
     try {
-      decoratorIsCentered = a.getBoolean(R.styleable.MaterialCalendarView_mcv_decoratorIsCentered, true);
+      decoratorFillsCell = a.getBoolean(R.styleable.MaterialCalendarView_mcv_decoratorFillsCell, false);
 
       decoratorPadding = a.getLayoutDimension(
               R.styleable.MaterialCalendarView_mcv_decoratorPadding,
@@ -419,7 +419,7 @@ public class MaterialCalendarView extends ViewGroup {
 
     if (isInEditMode()) {
       removeView(pager);
-      MonthView monthView = new MonthView(this, currentMonth, getFirstDayOfWeek(), true, decoratorIsCentered, decoratorPadding);
+      MonthView monthView = new MonthView(this, currentMonth, getFirstDayOfWeek(), true, decoratorFillsCell, decoratorPadding);
       monthView.setSelectionColor(getSelectionColor());
       monthView.setDateTextAppearance(adapter.getDateTextAppearance());
       monthView.setWeekDayTextAppearance(adapter.getWeekDayTextAppearance());
@@ -1993,7 +1993,7 @@ public class MaterialCalendarView extends ViewGroup {
       adapter = adapter.migrateStateAndReturn(newAdapter);
     }
     adapter.setShowWeekDays(showWeekDays);
-    adapter.setDecoratorIsCentered(decoratorIsCentered);
+    adapter.setDecoratorFillsCell(decoratorFillsCell);
     adapter.setDecoratorPadding(decoratorPadding);
     pager.setAdapter(adapter);
     setRangeDates(minDate, maxDate);
