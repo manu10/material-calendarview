@@ -71,8 +71,9 @@ public class MaterialCalendarView extends ViewGroup {
   public static final int INVALID_TILE_DIMENSION = -10;
   private boolean decoratorFillsCell;
   private int decoratorPadding;
+  private boolean dayOfWeekInDayCell;
 
-  /**
+    /**
    * {@linkplain IntDef} annotation for selection mode.
    *
    * @see #setSelectionMode(int)
@@ -295,6 +296,8 @@ public class MaterialCalendarView extends ViewGroup {
               0
       );
 
+      dayOfWeekInDayCell = a.getBoolean(R.styleable.MaterialCalendarView_mcv_dayOfWeekInDayCell, false);
+
       int calendarModeIndex = a.getInteger(
           R.styleable.MaterialCalendarView_mcv_calendarMode,
           0
@@ -419,7 +422,7 @@ public class MaterialCalendarView extends ViewGroup {
 
     if (isInEditMode()) {
       removeView(pager);
-      MonthView monthView = new MonthView(this, currentMonth, getFirstDayOfWeek(), true, decoratorFillsCell, decoratorPadding);
+      MonthView monthView = new MonthView(this, currentMonth, getFirstDayOfWeek(), true, decoratorFillsCell, decoratorPadding, dayOfWeekInDayCell);
       monthView.setSelectionColor(getSelectionColor());
       monthView.setDateTextAppearance(adapter.getDateTextAppearance());
       monthView.setWeekDayTextAppearance(adapter.getWeekDayTextAppearance());
@@ -1995,6 +1998,7 @@ public class MaterialCalendarView extends ViewGroup {
     adapter.setShowWeekDays(showWeekDays);
     adapter.setDecoratorFillsCell(decoratorFillsCell);
     adapter.setDecoratorPadding(decoratorPadding);
+    adapter.setdayOfWeekInDayCell(dayOfWeekInDayCell);
     pager.setAdapter(adapter);
     setRangeDates(minDate, maxDate);
 

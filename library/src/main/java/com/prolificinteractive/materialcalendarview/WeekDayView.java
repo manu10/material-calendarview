@@ -14,6 +14,7 @@ import org.threeten.bp.DayOfWeek;
  */
 @SuppressLint("ViewConstructor") class WeekDayView extends AppCompatTextView {
 
+
   private WeekDayFormatter formatter = WeekDayFormatter.DEFAULT;
   private DayOfWeek dayOfWeek;
 

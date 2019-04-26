@@ -70,6 +70,8 @@
 
     <attr name="mcv_decoratorPadding" format="dimension"/>
 
+    <attr name="mcv_dayOfWeekInDayCell" format="boolean"/>
+
   </declare-styleable>
 
 </resources>
