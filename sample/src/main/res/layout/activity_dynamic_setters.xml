@@ -24,6 +24,7 @@
         app:mcv_decoratorFillsCell="true"
         app:mcv_decoratorPadding="2dp"
         app:mcv_dayOfWeekInDayCell="true"
+        app:mcv_monthBarSize="40dp"
         />
 
     <LinearLayout
