@@ -69,11 +69,13 @@ import org.threeten.bp.temporal.WeekFields;
 public class MaterialCalendarView extends ViewGroup {
 
   public static final int INVALID_TILE_DIMENSION = -10;
+  public static final int INVALID_TOPBAR_DIMENSION = -1;
   private boolean decoratorFillsCell;
   private int decoratorPadding;
   private boolean dayOfWeekInDayCell;
+  private int monthBarSize;
 
-    /**
+  /**
    * {@linkplain IntDef} annotation for selection mode.
    *
    * @see #setSelectionMode(int)
@@ -297,6 +299,12 @@ public class MaterialCalendarView extends ViewGroup {
       );
 
       dayOfWeekInDayCell = a.getBoolean(R.styleable.MaterialCalendarView_mcv_dayOfWeekInDayCell, false);
+
+      monthBarSize = a.getLayoutDimension(
+              R.styleable.MaterialCalendarView_mcv_monthBarSize,
+              INVALID_TOPBAR_DIMENSION
+      );
+
 
       int calendarModeIndex = a.getInteger(
           R.styleable.MaterialCalendarView_mcv_calendarMode,
@@ -1619,9 +1627,16 @@ public class MaterialCalendarView extends ViewGroup {
       }
     }
 
-    //Calculate our size based off our measured tile size
+    final View topBar = getChildAt(0);
+
+    boolean shouldSetProvidedMonthBarSize = topBar instanceof LinearLayout && monthBarSize != INVALID_TOPBAR_DIMENSION;
+
+    //Calculate our size based off our measured tile size and the monthBarSize if set
     int measuredWidth = measureTileWidth * DEFAULT_DAYS_IN_WEEK;
-    int measuredHeight = measureTileHeight * viewTileHeight;
+    int measuredHeight;
+    if (shouldSetProvidedMonthBarSize){
+      measuredHeight = measureTileHeight * (viewTileHeight -1) + monthBarSize;
+    } else measuredHeight = measureTileHeight * viewTileHeight;
 
     //Put padding back in from when we took it away
     measuredWidth += getPaddingLeft() + getPaddingRight();
@@ -1636,7 +1651,23 @@ public class MaterialCalendarView extends ViewGroup {
 
     int count = getChildCount();
 
-    for (int i = 0; i < count; i++) {
+    if (shouldSetProvidedMonthBarSize) {
+
+      int topBarWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
+              DEFAULT_DAYS_IN_WEEK * measureTileWidth,
+              MeasureSpec.EXACTLY
+      );
+
+      int topBarHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
+              monthBarSize,
+              MeasureSpec.EXACTLY
+      );
+
+      topBar.measure(topBarWidthMeasureSpec, topBarHeightMeasureSpec);
+    }
+
+    int firstIndex = (shouldSetProvidedMonthBarSize ? 1 : 0);
+    for (int i = firstIndex; i < count; i++) {
       final View child = getChildAt(i);
 
       LayoutParams p = (LayoutParams) child.getLayoutParams();

@@ -72,6 +72,8 @@
 
     <attr name="mcv_dayOfWeekInDayCell" format="boolean"/>
 
+    <attr name="mcv_monthBarSize" format="dimension"/>
+
   </declare-styleable>
 
 </resources>
