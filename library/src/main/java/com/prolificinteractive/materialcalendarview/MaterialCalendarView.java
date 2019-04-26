@@ -69,11 +69,13 @@ import org.threeten.bp.temporal.WeekFields;
 public class MaterialCalendarView extends ViewGroup {
 
   public static final int INVALID_TILE_DIMENSION = -10;
+  public static final int INVALID_TOPBAR_DIMENSION = -1;
   private boolean decoratorFillsCell;
   private int decoratorPadding;
   private boolean dayOfWeekInDayCell;
+  private int topbarSize;
 
-    /**
+  /**
    * {@linkplain IntDef} annotation for selection mode.
    *
    * @see #setSelectionMode(int)
@@ -297,6 +299,12 @@ public class MaterialCalendarView extends ViewGroup {
       );
 
       dayOfWeekInDayCell = a.getBoolean(R.styleable.MaterialCalendarView_mcv_dayOfWeekInDayCell, false);
+
+      topbarSize = a.getLayoutDimension(
+              R.styleable.MaterialCalendarView_mcv_monthBarSize,
+              INVALID_TOPBAR_DIMENSION
+      );
+
 
       int calendarModeIndex = a.getInteger(
           R.styleable.MaterialCalendarView_mcv_calendarMode,
@@ -1636,7 +1644,27 @@ public class MaterialCalendarView extends ViewGroup {
 
     int count = getChildCount();
 
-    for (int i = 0; i < count; i++) {
+    final View topBar = getChildAt(0);
+
+    boolean shouldSetProvidedTopBarSize = topBar instanceof LinearLayout && topbarSize != INVALID_TOPBAR_DIMENSION;
+
+    if (shouldSetProvidedTopBarSize) {
+
+      int topBarWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
+              DEFAULT_DAYS_IN_WEEK * measureTileWidth,
+              MeasureSpec.EXACTLY
+      );
+
+      int topBarHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
+              topbarSize,
+              MeasureSpec.EXACTLY
+      );
+
+      topBar.measure(topBarWidthMeasureSpec, topBarHeightMeasureSpec);
+    }
+
+    int firstIndex = (shouldSetProvidedTopBarSize ? 1 : 0);
+    for (int i = firstIndex; i < count; i++) {
       final View child = getChildAt(i);
 
       LayoutParams p = (LayoutParams) child.getLayoutParams();
