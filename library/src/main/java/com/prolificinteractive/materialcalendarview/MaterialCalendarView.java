@@ -73,7 +73,7 @@ public class MaterialCalendarView extends ViewGroup {
   private boolean decoratorFillsCell;
   private int decoratorPadding;
   private boolean dayOfWeekInDayCell;
-  private int topbarSize;
+  private int monthBarSize;
 
   /**
    * {@linkplain IntDef} annotation for selection mode.
@@ -300,7 +300,7 @@ public class MaterialCalendarView extends ViewGroup {
 
       dayOfWeekInDayCell = a.getBoolean(R.styleable.MaterialCalendarView_mcv_dayOfWeekInDayCell, false);
 
-      topbarSize = a.getLayoutDimension(
+      monthBarSize = a.getLayoutDimension(
               R.styleable.MaterialCalendarView_mcv_monthBarSize,
               INVALID_TOPBAR_DIMENSION
       );
@@ -1627,9 +1627,16 @@ public class MaterialCalendarView extends ViewGroup {
       }
     }
 
-    //Calculate our size based off our measured tile size
+    final View topBar = getChildAt(0);
+
+    boolean shouldSetProvidedMonthBarSize = topBar instanceof LinearLayout && monthBarSize != INVALID_TOPBAR_DIMENSION;
+
+    //Calculate our size based off our measured tile size and the monthBarSize if set
     int measuredWidth = measureTileWidth * DEFAULT_DAYS_IN_WEEK;
-    int measuredHeight = measureTileHeight * viewTileHeight;
+    int measuredHeight;
+    if (shouldSetProvidedMonthBarSize){
+      measuredHeight = measureTileHeight * (viewTileHeight -1) + monthBarSize;
+    } else measuredHeight = measureTileHeight * viewTileHeight;
 
     //Put padding back in from when we took it away
     measuredWidth += getPaddingLeft() + getPaddingRight();
@@ -1644,11 +1651,7 @@ public class MaterialCalendarView extends ViewGroup {
 
     int count = getChildCount();
 
-    final View topBar = getChildAt(0);
-
-    boolean shouldSetProvidedTopBarSize = topBar instanceof LinearLayout && topbarSize != INVALID_TOPBAR_DIMENSION;
-
-    if (shouldSetProvidedTopBarSize) {
+    if (shouldSetProvidedMonthBarSize) {
 
       int topBarWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
               DEFAULT_DAYS_IN_WEEK * measureTileWidth,
@@ -1656,14 +1659,14 @@ public class MaterialCalendarView extends ViewGroup {
       );
 
       int topBarHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
-              topbarSize,
+              monthBarSize,
               MeasureSpec.EXACTLY
       );
 
       topBar.measure(topBarWidthMeasureSpec, topBarHeightMeasureSpec);
     }
 
-    int firstIndex = (shouldSetProvidedTopBarSize ? 1 : 0);
+    int firstIndex = (shouldSetProvidedMonthBarSize ? 1 : 0);
     for (int i = firstIndex; i < count; i++) {
       final View child = getChildAt(i);
 
